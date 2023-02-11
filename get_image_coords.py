@@ -9,9 +9,11 @@ def mouse_callback(event, x, y, flags, params):
     red = [0, 0, 255]
     # left-click event value is 1
     if event == 1:
-        global left_clicks, scale_factor
+        global left_clicks, scale_factor, imgS
         # store the coordinates of the left-click event
         left_clicks.append(list(np.array([x, y])/scale_factor*NM_PER_PIXEL))
+        imgS = cv2.circle(imgS, (x, y), radius=1,
+                          color=red, thickness=-1)
         print(left_clicks)
         cv2.imshow('image', imgS)
 
@@ -19,7 +21,7 @@ def mouse_callback(event, x, y, flags, params):
 def update_image():
     global img, imgS, scale_factor
     filename = FILENAME
-    img = cv2.imread(filename, 0)
+    img = cv2.imread(filename)
     imgS = cv2.resize(img, tuple(
         np.array([img.shape[0], img.shape[1]])*scale_factor))
 
@@ -50,6 +52,7 @@ def main():
     # set mouse callback function for window
     cv2.setMouseCallback('image', mouse_callback)
     cv2.imshow('image', imgS)
+    print('Press esc to end program')
 
     while(1):
         k = cv2.waitKey(33)
