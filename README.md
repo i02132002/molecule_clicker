@@ -24,7 +24,11 @@ pip install -e .
 ```bash
 python get_image_coords.py test.jpg 100 192
 ```
+
 arg[1]: 'test.jpg': the image to open
+
 arg[2]: 100: the size of the image, in this case 100 nm x 100 nm
+
 arg[3]: 192: the pixel resolution of the image, in this case 192 x 192
+
 This command opens up 'test.jpg' so you can click on points in the canvas. After you are done clicking, press esc and the positions will be written to a file positions.txt.
