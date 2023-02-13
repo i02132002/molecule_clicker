@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import sys
-from matplotlib import pyplot as plt
+import structure_factor
 
 
 def mouse_callback(event, x, y, flags, params):
@@ -30,9 +30,9 @@ def main():
     global FILENAME, scale_factor, NM_PER_PIXEL, left_clicks
     try:
         FILENAME = sys.argv[1]
-        SCAN_SIZE = sys.argv[2]
-        PIXELS = sys.argv[3]
-        NM_PER_PIXEL = float(SCAN_SIZE) / float(PIXELS)
+        SCAN_SIZE = float(sys.argv[2])
+        PIXELS = float(sys.argv[3])
+        NM_PER_PIXEL = SCAN_SIZE / PIXELS
     except IndexError:
         print('Missing some arguments: filename, scan_size_nm, n_pixels')
         return
@@ -67,7 +67,11 @@ def main():
     except IOError:
         f = open("positions.csv", 'w+')
         print("File Created")
-    np.savetxt("positions.csv", left_clicks, delimiter=",")
+    filename = "positions.csv"
+    np.savetxt(filename, left_clicks, delimiter=",")
+    structure_factor.plot_structure_factor(left_clicks, SCAN_SIZE, SCAN_SIZE)
+
+
 
 
 if __name__ == main():
