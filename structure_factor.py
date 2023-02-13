@@ -1,6 +1,6 @@
 import freud
 import numpy as np
-
+import matplotlib.pyplot as plt
 def calculate_structure_factor(coordinates, Lx, Ly, bins, k_max, k_min=0):
     """Calculates structure factor via the freud library.
     
@@ -35,12 +35,24 @@ def calculate_structure_factor(coordinates, Lx, Ly, bins, k_max, k_min=0):
         Static structure factor S(k) values (y-dimension values for plot).
         
     """
-    new_coordinates = coordinates - np.array([Lx/2., Ly/2.])
-    points = np.concatenate([new_coordinates, np.zeros((new_coordinates.shape[0], 1))], axis=1)
-    box = freud.Box.cube(L=min(Lx, Ly))
+    box, points = transform_box_points(coordinates, Lx, Ly)
     sf = freud.diffraction.StaticStructureFactorDirect(bins=bins, k_max=k_max, k_min=k_min)
     sf.compute(system=(box, points))
     bin_edges = sf.bin_edges[:-1]
     sf_values = sf.S_k
-    
     return [bin_edges, sf_values]
+
+def transform_box_points(coordinates, Lx, Ly):
+    new_coordinates = coordinates - np.array([Lx / 2., Ly / 2.])
+    points = np.concatenate([new_coordinates, np.zeros((new_coordinates.shape[0], 1))], axis=1)
+    box = freud.Box.cube(L=min(Lx, Ly))
+    return box, points
+
+def plot_structure_factor(coordinates, Lx, Ly):
+    #coordinates = np.loadtxt(filename, delimiter=",", dtype=float)
+    box, coordinates = transform_box_points(coordinates, Lx, Ly)
+    dp = freud.diffraction.DiffractionPattern()
+    dp.compute((box, coordinates))
+    img = dp.to_image()
+    plt.imshow(img)
+    plt.show()
