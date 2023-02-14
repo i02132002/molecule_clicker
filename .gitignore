@@ -1,3 +1,6 @@
 venv/
 __pycache__/
 positions.csv
+*.csv
+test.py
+test2.py

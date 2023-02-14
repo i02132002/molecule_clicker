@@ -51,8 +51,11 @@ def transform_box_points(coordinates, Lx, Ly):
 def plot_structure_factor(coordinates, Lx, Ly):
     #coordinates = np.loadtxt(filename, delimiter=",", dtype=float)
     box, coordinates = transform_box_points(coordinates, Lx, Ly)
-    dp = freud.diffraction.DiffractionPattern(grid_size=2048)
-    dp.compute((box, coordinates), zoom=4, peak_width = 0.1)
-    img = dp.to_image(vmin=0.1*dp.N_points, vmax=0.7*dp.N_points)
-    plt.imshow(img)
+    GRID_SIZE = 2048
+    ZOOM = 4
+    dp = freud.diffraction.DiffractionPattern(grid_size=GRID_SIZE)
+    dp.compute((box, coordinates), zoom=ZOOM, peak_width = 0.1)
+    img = dp.to_image(vmin=0.01*dp.N_points, vmax=0.7*dp.N_points)
+    K_MAX = np.pi /  Lx * GRID_SIZE
+    plt.imshow(img, origin='lower', extent=[-K_MAX/ZOOM, K_MAX/ZOOM, -K_MAX/ZOOM, K_MAX/ZOOM])
     plt.show()

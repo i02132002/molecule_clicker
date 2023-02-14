@@ -10,9 +10,10 @@ def mouse_callback(event, x, y, flags, params):
     # left-click event value is 1
     if event == 1:
         global left_clicks, scale_factor, imgS
+        adj_y = imgS.shape[0] - y
         # store the coordinates of the left-click event
-        left_clicks.append(list(np.array([x, y])/scale_factor*NM_PER_PIXEL))
-        imgS = cv2.circle(imgS, (x, y), radius=1,
+        left_clicks.append(list(np.array([x, adj_y])/scale_factor*NM_PER_PIXEL))
+        imgS = cv2.circle(imgS, (x, y), radius=5,
                           color=red, thickness=-1)
         print(left_clicks)
         cv2.imshow('image', imgS)
