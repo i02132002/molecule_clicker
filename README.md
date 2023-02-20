@@ -22,7 +22,7 @@ pip install -e .
 
 # Examples
 ```bash
-python get_image_coords.py test.jpg 100 192
+python GetImageCoords.py test.jpg 100 192
 ```
 
 arg[1]: 'test.jpg': the image to open

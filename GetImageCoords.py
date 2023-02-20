@@ -1,7 +1,7 @@
 import cv2
 import numpy as np
 import sys
-import structure_factor
+from StructureFactor import *
 
 
 def mouse_callback(event, x, y, flags, params):
@@ -12,7 +12,7 @@ def mouse_callback(event, x, y, flags, params):
         global left_clicks, scale_factor, imgS
         adj_y = imgS.shape[0] - y
         # store the coordinates of the left-click event
-        left_clicks.append(list(np.array([x, adj_y])/scale_factor*NM_PER_PIXEL))
+        left_clicks.append(list(np.array([x, adj_y])/imgS.shape[0]*SCAN_SIZE))
         imgS = cv2.circle(imgS, (x, y), radius=5,
                           color=red, thickness=-1)
         print(left_clicks)
@@ -28,12 +28,10 @@ def update_image():
 
 
 def main():
-    global FILENAME, scale_factor, NM_PER_PIXEL, left_clicks
+    global FILENAME, scale_factor, SCAN_SIZE, left_clicks
     try:
         FILENAME = sys.argv[1]
         SCAN_SIZE = float(sys.argv[2])
-        PIXELS = float(sys.argv[3])
-        NM_PER_PIXEL = SCAN_SIZE / PIXELS
     except IndexError:
         print('Missing some arguments: filename, scan_size_nm, n_pixels')
         return
@@ -64,13 +62,14 @@ def main():
     cv2.destroyAllWindows()
     try:
         f = open("positions.csv", 'r')
-        print("File Exists")
+        print("positions.csv overwritten")
     except IOError:
         f = open("positions.csv", 'w+')
-        print("File Created")
+        print("positions.csv created")
     filename = "positions.csv"
     np.savetxt(filename, left_clicks, delimiter=",")
-    structure_factor.plot_structure_factor(left_clicks, SCAN_SIZE, SCAN_SIZE)
+    sfp = StructureFactorPlotter(SCAN_SIZE, SCAN_SIZE, coordinates=left_clicks)
+    sfp.plot_structure_factor()
 
 
 
