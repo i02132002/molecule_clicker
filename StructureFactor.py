@@ -101,9 +101,9 @@ class StructureFactorPlotter:
         dp = freud.diffraction.DiffractionPattern(grid_size=grid_size)
         dp.compute((box, coordinates), zoom=zoom, peak_width=0.1)
         img = dp.to_image(vmin=0.01*dp.N_points, vmax=0.6*dp.N_points)
-        k_max = 30  # np.pi /  Lx * grid_size
-        plt.imshow(img, origin='lower', extent=[-k_max, k_max, -k_max, k_max])
-        plt.axis('off')
+        k_max = np.pi /  self.Lx * grid_size
+        plt.imshow(img, origin='lower', extent=[-k_max/zoom, k_max/zoom, -k_max/zoom, k_max/zoom])
+        #plt.axis('off')
         if self.filename != None:
             plt.savefig(self.filename + '_structure_factor.png', dpi=1200, bbox_inches='tight')
         plt.show()
